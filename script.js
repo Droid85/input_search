@@ -3,7 +3,6 @@ const inputEl = document.querySelector('.search-input');
 const outputEl = document.querySelector('#output');
 
 let userLogin = '/';
-// let userData = {};
 
 const ENVIROMENT = {
     getPost: '/users',
@@ -11,10 +10,12 @@ const ENVIROMENT = {
 
 class HttpServise {
     static API = 'https://api.github.com';
+    ERROR = '404 USER NOT FOUND';
 
     get(url) {
         return axios.get(`${HttpServise.API}${ENVIROMENT.getPost}${url}`);
     }
+
 }
 
 const httpService = new HttpServise();
@@ -25,11 +26,10 @@ function onClickBtn (e) {
     let userData = {};
     userLogin += inputEl.value;
     httpService.get(userLogin).then((r) => {
-        console.log(r);
         Object.assign(userData, r.data);
-        console.log(userData.avatar_url);
         renderData(userData);
-    });
+    })
+    .catch(error => alert(`${httpService.ERROR}`));
     clearData();
 }
 
