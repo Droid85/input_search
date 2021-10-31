@@ -2,18 +2,18 @@ const btnEl = document.querySelector('#btn');
 const inputEl = document.querySelector('.search-input');
 const outputEl = document.querySelector('#output');
 
-let userLogin = '/';
+let userLogin = null;
 
 const ENVIROMENT = {
-    getPost: '/users',
+    getPost: 'users/',
 }
 
 class HttpServise {
-    static API = 'https://api.github.com';
+    static API = 'https://api.github.com/';
     ERROR = '404 USER NOT FOUND';
 
-    get(url) {
-        return axios.get(`${HttpServise.API}${ENVIROMENT.getPost}${url}`);
+    get(url, login) {
+        return axios.get(`${HttpServise.API}${url}${login}`);
     }
 
 }
@@ -23,11 +23,9 @@ const httpService = new HttpServise();
 btnEl.addEventListener('click', onClickBtn);
 
 function onClickBtn (e) {
-    let userData = {};
-    userLogin += inputEl.value;
-    httpService.get(userLogin).then((r) => {
-        Object.assign(userData, r.data);
-        renderData(userData);
+    userLogin = inputEl.value;
+    httpService.get(ENVIROMENT.getPost, userLogin).then((r) => {
+        renderData(r.data);
     })
     .catch(error => alert(`${httpService.ERROR}`));
     clearData();
@@ -42,5 +40,5 @@ function renderData(data) {
 
 function clearData() {
     inputEl.value = '';
-    userLogin = '/'
+    userLogin = '';
 }
